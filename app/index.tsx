@@ -1,11 +1,8 @@
 import "../global.css";
-import { NavigationIndependentTree } from "@react-navigation/native";
-import AppNavigator from "@/navigation/AppNavigator";
+import { Redirect } from "expo-router";
 
-export default function App() {
-  return (
-    <NavigationIndependentTree>
-      <AppNavigator />
-    </NavigationIndependentTree>
-  );
+export default function Index() {
+  const isSignedIn = false; 
+  if (!isSignedIn) return <Redirect href="/signin/index" />;
+  return <Redirect href="/(tabs)/home" />;
 }
