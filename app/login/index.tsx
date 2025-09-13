@@ -4,11 +4,11 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import styles from "./styles";
 
-export default function SignIn() {
+ const LogIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = () => {
+  const handleUserLogin = () => {
     console.log("Email:", email, "Password:", password);
   };
 
@@ -30,7 +30,7 @@ export default function SignIn() {
         <TouchableOpacity>
           <Text style={styles.link}>Forgot Password?</Text>
         </TouchableOpacity>
-        <Button title="Sign In" onPress={handleSignIn} />
+        <Button title="Log In" onPress={handleUserLogin} />
       </View>
       <TouchableOpacity>
         <Text style={styles.link}>Don’t have an account? Sign Up</Text>
@@ -38,3 +38,5 @@ export default function SignIn() {
     </View>
   );
 }
+
+export default LogIn;
