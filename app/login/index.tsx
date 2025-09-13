@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import styles from "./styles";
 
- const LogIn = () => {
+ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,4 +39,4 @@ import styles from "./styles";
   );
 }
 
-export default LogIn;
+export default Login;

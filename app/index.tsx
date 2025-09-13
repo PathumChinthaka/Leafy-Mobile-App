@@ -5,7 +5,7 @@ export default function Index() {
   const isSignedIn = true; 
 
   if (!isSignedIn) {
-    return <Redirect href="/signin" />;
+    return <Redirect href="/login" />;
   }
 
   return <Redirect href="/(tabs)/home" />;

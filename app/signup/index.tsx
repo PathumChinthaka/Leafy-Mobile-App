@@ -32,8 +32,6 @@ export default function RegisterScreen() {
     } catch (err: unknown) {
       if (err instanceof Error) {
         Alert.alert("Registration Failed");
-      } else {
-        Alert.alert("Registration Failed");
       }
     } finally {
       setLoading(false);
@@ -41,10 +39,10 @@ export default function RegisterScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-black px-6">
-      <View className="items-center mt-12 mb-6">
+    <ScrollView className="flex-1 bg-black">
+      <View className="items-center mb-6">
         <ImageBackground
-          source={require("../../assets/images/Sign-in-Screen-Img.jpg")}
+          source={require("../../assets/images/signup-screen-img.jpg")}
           style={styles.bg}
         />
         <Text className="text-white text-2xl font-bold mt-4">
