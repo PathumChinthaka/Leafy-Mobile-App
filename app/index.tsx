@@ -1,12 +1,12 @@
 import "../global.css";
-import { Redirect } from "expo-router";
+import { Text, View } from "react-native";
 
-export default function Index() {
-  const isSignedIn = true; 
-
-  if (!isSignedIn) {
-    return <Redirect href="/login" />;
-  }
-
-  return <Redirect href="/(tabs)/home" />;
+export default function App() {
+  return (
+    <View className="flex-1 items-center justify-center bg-white">
+      <Text className="text-2xl font-bold text-blue-500">
+        Welcome to Nativewind!
+      </Text>
+    </View>
+  );
 }
