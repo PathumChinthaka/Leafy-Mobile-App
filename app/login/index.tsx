@@ -3,13 +3,28 @@ import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import styles from "./styles";
+import { FirebaseError } from "firebase/app";
+import { auth } from "@/firebase/firebase.config";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
- const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleUserLogin = () => {
-    console.log("Email:", email, "Password:", password);
+  const handleUserLogin = async () => {
+    setLoading(true);
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      console.log("Signed in:", userCred.user.uid);
+    } catch (err) {
+      console.error("Sign in failed:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,6 +52,6 @@ import styles from "./styles";
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 export default Login;

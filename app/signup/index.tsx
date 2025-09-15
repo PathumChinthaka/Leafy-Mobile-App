@@ -11,6 +11,9 @@ import { useRouter } from "expo-router";
 import styles from "./styles";
 import Input from "@/components/Input/Input";
 import Button from "@/components/Button/Button";
+import { FirebaseError } from "firebase/app";
+import { auth } from "@/firebase/firebase.config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>("");
@@ -26,13 +29,13 @@ export default function RegisterScreen() {
       Alert.alert("Passwords do not match");
       return;
     }
-
+    setLoading(true);
     try {
-      setLoading(true);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        Alert.alert("Registration Failed");
-      }
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("Check your emails!");
+    } catch (e: any) {
+      const err = e as FirebaseError;
+      alert("Registration failed: " + err.message);
     } finally {
       setLoading(false);
     }
