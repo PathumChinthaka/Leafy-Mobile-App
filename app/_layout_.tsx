@@ -5,50 +5,44 @@ import { View, ActivityIndicator } from "react-native";
 
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>();
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const router = useRouter();
   const segments = useSegments();
 
-  const onAuthStateChanged = (user: FirebaseAuthTypes.User | null) => {
-    console.log("onAuthStateChanged", user);
-    setUser(user);
-    if (initializing) setInitializing(false);
-  };
-
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
+    const unsubscribe = auth().onAuthStateChanged((firebaseUser) => {
+      setUser(firebaseUser);
+      setInitializing(false);
+    });
+
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
     if (initializing) return;
 
-    const inAuthGroup = segments[0] === "(tabs)";
+    const inTabsGroup = segments[0] === "(tabs)";
 
-    if (user && !inAuthGroup) {
+    if (user && !inTabsGroup) {
       router.replace("/(tabs)/home");
-    } else if (!user && inAuthGroup) {
-      router.replace("/");
+    } else if (!user && inTabsGroup) {
+      router.replace("/login");
     }
-  }, [user, initializing]);
+  }, [user, initializing, segments]);
 
-  if (initializing)
+  if (initializing) {
     return (
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1,
-        }}
-      >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
       </View>
     );
+  }
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ title: "Login" }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="login" options={{ title: "Log In" }} />
+      <Stack.Screen name="signup" options={{ title: "Sign Up" }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }
