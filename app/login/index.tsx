@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import styles from "./styles";
-import { FirebaseError } from "firebase/app";
 import { auth } from "@/firebase/firebase.config";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -24,8 +26,14 @@ const Login = () => {
       console.error("Sign in failed:", err);
     } finally {
       setLoading(false);
+      setEmail("");
+      setPassword("");
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <View style={styles.container}>
