@@ -14,6 +14,7 @@ import { FirebaseError } from "firebase/app";
 import { auth } from "@/firebase/firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import Button from "@/components/Button/Button";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>("");
@@ -50,57 +51,40 @@ export default function RegisterScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-black">
-      <View className="items-center mb-6">
-        <ImageBackground
-          source={require("../../assets/images/signup-screen-img.jpg")}
-          style={styles.bg}
-        />
-        <Text className="text-white text-2xl font-bold mt-4">
-          Create Account
-        </Text>
-      </View>
-
-      <View className="space-y-4 bg-black">
+    <View style={styles.container}>
+      <ImageBackground
+        source={require("../../assets/images/signup-screen-img.jpg")}
+        style={styles.bg}
+      />
+      <Text style={styles.title}>Create Account</Text>
+      <View style={styles.form}>
         <Input
-          placeholder="User Name"
+          placeholder="Username"
           value={displayName}
           onChangeText={setDisplayName}
         />
-
         <Input placeholder="Email" value={email} onChangeText={setEmail} />
-
         <Input
           placeholder="Password"
+          secureTextEntry
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
         />
-
         <Input
           placeholder="Confirm Password"
+          secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry
         />
+        <Button title="Sign Up" onPress={handleRegister} />
       </View>
-
       <TouchableOpacity
-        onPress={handleRegister}
-        disabled={loading}
-        className="w-full p-4 mt-6 rounded-xl"
-        style={{ backgroundColor: "#38e07b" }}
+        onPress={() => {
+          router.replace("/login");
+        }}
       >
-        <Text className="text-center text-black font-bold text-lg">
-          {loading ? "Creating..." : "Register"}
-        </Text>
+        <Text style={styles.link}>Already have an account? Log In</Text>
       </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => router.push("/login")} className="mt-6">
-        <Text className="text-center text-gray-400">
-          Already have an account? <Text className="text-[#38e07b]">Login</Text>
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 }

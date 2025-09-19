@@ -2,6 +2,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { View, ActivityIndicator } from "react-native";
+import "../global.css";
 
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
