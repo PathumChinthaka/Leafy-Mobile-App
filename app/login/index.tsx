@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   ImageBackground,
   Text,
   TouchableOpacity,
@@ -11,21 +12,25 @@ import styles from "./styles";
 import { auth } from "@/firebase/firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { useRouter } from "expo-router";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleUserLogin = async () => {
     setLoading(true);
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
       console.log("Signed in:", userCred.user.uid);
+      setLoading(false);
+      router.replace("/(tabs)/home");
     } catch (err) {
       console.error("Sign in failed:", err);
-    } finally {
       setLoading(false);
+    } finally {
       setEmail("");
       setPassword("");
     }
@@ -55,7 +60,11 @@ const Login = () => {
         </TouchableOpacity>
         <Button title="Log In" onPress={handleUserLogin} />
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          router.replace("/signup");
+        }}
+      >
         <Text style={styles.link}>Don’t have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>

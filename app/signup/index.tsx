@@ -10,10 +10,10 @@ import {
 import { useRouter } from "expo-router";
 import styles from "./styles";
 import Input from "@/components/Input/Input";
-import Button from "@/components/Button/Button";
 import { FirebaseError } from "firebase/app";
 import { auth } from "@/firebase/firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>("");
@@ -21,7 +21,6 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [displayName, setDisplayName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
   const router = useRouter();
 
   const handleRegister = async (): Promise<void> => {
@@ -32,14 +31,23 @@ export default function RegisterScreen() {
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      alert("Check your emails!");
+      setLoading(false);
+      router.replace("/login");
     } catch (e: any) {
       const err = e as FirebaseError;
+      setLoading(false);
       alert("Registration failed: " + err.message);
     } finally {
-      setLoading(false);
+      setEmail("");
+      setPassword("");
+      setDisplayName("");
+      setConfirmPassword("");
     }
   };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <ScrollView className="flex-1 bg-black">
@@ -53,9 +61,9 @@ export default function RegisterScreen() {
         </Text>
       </View>
 
-      <View className="space-y-4">
+      <View className="space-y-4 bg-black">
         <Input
-          placeholder="Full Name"
+          placeholder="User Name"
           value={displayName}
           onChangeText={setDisplayName}
         />
