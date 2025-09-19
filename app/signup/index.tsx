@@ -26,7 +26,12 @@ export default function RegisterScreen() {
 
   const handleRegister = async (): Promise<void> => {
     if (password !== confirmPassword) {
-      Alert.alert("Passwords do not match");
+      Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+
+    if (password.length < 8) {
+      Alert.alert("Error", "Password must be at least 8 characters long");
       return;
     }
     setLoading(true);
