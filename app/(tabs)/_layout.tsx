@@ -6,7 +6,7 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         tabBarActiveTintColor: "#f4511e",
       }}
     >
@@ -22,7 +22,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="plant"
         options={{
-          title: "Add Plant",
+          title: "Plant",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="leaf" size={size} color={color} />
           ),
@@ -34,6 +34,15 @@ export default function TabsLayout() {
           title: "Categories",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="addPlant"
+        options={{
+          title: "Add Plant",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add" size={size} color={color} />
           ),
         }}
       />
