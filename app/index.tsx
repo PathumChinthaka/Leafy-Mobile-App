@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { ActivityIndicator, View, Text } from "react-native";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebase/firebase.config";
+import "../global.css";
 
 export default function Index() {
   const router = useRouter();
