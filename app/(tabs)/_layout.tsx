@@ -7,7 +7,11 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#f4511e",
+        tabBarActiveTintColor: "#38e07b",
+        tabBarStyle: {
+          backgroundColor: "#122118",
+          borderTopColor: "#254632",
+        },
       }}
     >
       <Tabs.Screen
@@ -28,7 +32,7 @@ export default function TabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="categories"
         options={{
           title: "Categories",
@@ -36,7 +40,7 @@ export default function TabsLayout() {
             <Ionicons name="list" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="addPlant"
         options={{

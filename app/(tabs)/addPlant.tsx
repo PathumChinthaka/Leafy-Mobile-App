@@ -13,6 +13,7 @@ import { ArrowLeft } from "lucide-react-native";
 export default function AddPlantScreen() {
   const router = useRouter();
   const [plantName, setPlantName] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [species, setSpecies] = useState("");
   const [category, setCategory] = useState("Category");
   const [datePlanted, setDatePlanted] = useState("");
@@ -60,6 +61,14 @@ export default function AddPlantScreen() {
           placeholderTextColor="#95c6a9"
           value={species}
           onChangeText={setSpecies}
+          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
+        />
+
+        <TextInput
+          placeholder="Quantity"
+          placeholderTextColor="#95c6a9"
+          value={quantity}
+          onChangeText={setQuantity}
           className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
         />
 

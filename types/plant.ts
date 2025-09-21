@@ -6,7 +6,8 @@ export type Plant = {
   datePlanted: Date;          
   wateringFrequency: number;  
   lastWatered: Date;          
-  notes?: string;             
+  notes?: string;
+  quantity?: number;             
   imageUrl?: string;          
   activeStatus: boolean;      
   updatedOn: Date;            
