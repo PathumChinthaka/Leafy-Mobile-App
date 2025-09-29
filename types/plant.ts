@@ -1,14 +1,12 @@
 export type Plant = {
   id: string;                
   name: string;               
-  species?: string;           
+  species?: string | null;           
   category: string;           
   datePlanted: Date;          
   wateringFrequency: number;  
-  lastWatered: Date;          
-  notes?: string;
-  quantity?: number;             
-  imageUrl?: string;          
+  notes?: string | null;
+  quantity: number;             
   activeStatus: boolean;      
-  updatedOn: Date;            
+  updatedOn?: Date | null;            
 };

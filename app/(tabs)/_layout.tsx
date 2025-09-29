@@ -32,15 +32,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="categories"
-        options={{
-          title: "Categories",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list" size={size} color={color} />
-          ),
-        }}
-      /> */}
       <Tabs.Screen
         name="addPlant"
         options={{

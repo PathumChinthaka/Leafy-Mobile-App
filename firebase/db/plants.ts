@@ -25,10 +25,8 @@ export async function getPlants(): Promise<Plant[]> {
       category: data.category,
       datePlanted: data.datePlanted?.toDate(),
       wateringFrequency: data.wateringFrequency,
-      lastWatered: data.lastWatered?.toDate(),
       notes: data.notes,
       quantity: data.quantity,
-      imageUrl: data.imageUrl,
       activeStatus: data.activeStatus,
       updatedOn: data.updatedOn?.toDate(),
     } as Plant;
@@ -49,10 +47,8 @@ export async function getPlantById(id: string): Promise<Plant | null> {
     category: data.category,
     datePlanted: data.datePlanted?.toDate(),
     wateringFrequency: data.wateringFrequency,
-    lastWatered: data.lastWatered?.toDate(),
     notes: data.notes,
     quantity: data.quantity,
-    imageUrl: data.imageUrl,
     activeStatus: data.activeStatus,
     updatedOn: data.updatedOn?.toDate(),
   } as Plant;
@@ -67,7 +63,7 @@ export async function addPlant(
     activeStatus: plant.activeStatus ?? true, 
   });
 
-  return { id: plantDetails.id, ...plant, updatedOn: new Date(), activeStatus: true };
+  return { id: plantDetails.id, ...plant, updatedOn: null, activeStatus: true };
 }
 
 export async function updatePlant(

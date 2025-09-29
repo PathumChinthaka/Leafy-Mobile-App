@@ -5,32 +5,90 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Platform,
+  Pressable,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
 import { ArrowLeft } from "lucide-react-native";
+import { addPlant } from "@/firebase/db/plants";
+import { Plant } from "@/types/plant";
+import { v4 as uuidv4 } from "uuid";
+import RNDateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function AddPlantScreen() {
   const router = useRouter();
   const [plantName, setPlantName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [species, setSpecies] = useState("");
-  const [category, setCategory] = useState("Category");
-  const [datePlanted, setDatePlanted] = useState("");
+  const [category, setCategory] = useState("vegetable");
+  const [datePlanted, setDatePlanted] = useState(new Date());
   const [wateringFrequency, setWateringFrequency] = useState("");
-  const [lastWatered, setLastWatered] = useState("");
   const [notes, setNotes] = useState("");
+  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleAddPlant = () => {
-    console.log({
-      plantName,
-      species,
-      category,
-      datePlanted,
-      wateringFrequency,
-      lastWatered,
-      notes,
-    });
+  const handleAddPlant = async () => {
+    try {
+      setLoading(true);
+      const plantDetails: Plant = {
+        id: uuidv4(),
+        name: plantName,
+        species: species || null,
+        category: category,
+        datePlanted: new Date(),
+        wateringFrequency: Number(wateringFrequency),
+        notes: notes,
+        quantity: Number(quantity),
+        activeStatus: true,
+        updatedOn: null,
+      };
+      await addPlant(plantDetails);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+      clearPlantData();
+    }
+  };
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  const formatDate = (rawDate: Date): string => {
+    return rawDate.toLocaleDateString();
+  };
+
+  const onDateChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
+    if (Platform.OS === "android") {
+      setShowPicker(false);
+    }
+
+    if (selectedDate) {
+      setDatePlanted(selectedDate);
+    }
+  };
+
+  const showDatepicker = () => {
+    setShowPicker(true);
+  };
+
+  const clearPlantData = () => {
+    setPlantName("");
+    setQuantity("");
+    setSpecies("");
+    setCategory("vegetable");
+    setDatePlanted(new Date());
+    setWateringFrequency("");
+    setNotes("");
+    setShowPicker(false);
   };
 
   return (
@@ -85,20 +143,31 @@ export default function AddPlantScreen() {
               height: 56,
             }}
           >
-            <Picker.Item label="Category" value="Category" />
             <Picker.Item label="Vegetable" value="vegetable" />
             <Picker.Item label="Herb" value="herb" />
             <Picker.Item label="Fruit" value="fruit" />
           </Picker>
         </View>
 
-        <TextInput
-          placeholder="Date Planted"
-          placeholderTextColor="#95c6a9"
-          value={datePlanted}
-          onChangeText={setDatePlanted}
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
+        <Pressable onPress={showDatepicker}>
+          <TextInput
+            placeholder="Date Planted"
+            placeholderTextColor="#95c6a9"
+            value={formatDate(datePlanted)}
+            editable={false}
+            className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
+          />
+        </Pressable>
+
+        {showPicker && (
+          <RNDateTimePicker
+            testID="dateTimePicker"
+            value={datePlanted}
+            mode="date"
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={onDateChange}
+          />
+        )}
 
         <TextInput
           placeholder="Watering Frequency (Days)"
@@ -106,14 +175,6 @@ export default function AddPlantScreen() {
           value={wateringFrequency}
           onChangeText={setWateringFrequency}
           keyboardType="numeric"
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
-
-        <TextInput
-          placeholder="Last Watered"
-          placeholderTextColor="#95c6a9"
-          value={lastWatered}
-          onChangeText={setLastWatered}
           className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
         />
 
