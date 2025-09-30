@@ -4,20 +4,64 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
+import { getPlants } from "@/firebase/db/plants";
+import { useEffect, useState } from "react";
+import { Plant } from "@/types/plant";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
-export default function Plant() {
-  const plants = [
-    { name: "Cherry Tomatoes", category: "Tomatoes", count: 10 },
-    { name: "Bell Peppers", category: "Peppers", count: 5 },
-    { name: "Basil", category: "Herbs", count: 20 },
-    { name: "Sunflowers", category: "Flowers", count: 15 },
-    { name: "Cucumbers", category: "Vegetables", count: 8 },
-    { name: "Strawberries", category: "Fruits", count: 12 },
-  ];
+export default function PlantScreen() {
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        setLoading(true);
+        const plants = await getPlants();
+        if (plants) {
+          setPlants(plants);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("failed to fetch plants", error);
+        setLoading(false);
+      }
+    };
+
+    fetchPlants();
+  }, []);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  const handleEditPlantDetails = (plant: Plant) => {};
+
+  const handleDeletePlant = async (id: string) => {
+    try {
+    } catch (error) {
+      console.error("Failed to delete plant:", error);
+    }
+  };
+
+  const confirmDeletePlant = (id: string) => {
+    Alert.alert("Delete Plant", "Are you sure you want to delete this plant?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => handleDeletePlant(id),
+      },
+    ]);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#122118]">
@@ -39,9 +83,9 @@ export default function Plant() {
       </View>
 
       <ScrollView className="flex-1">
-        {plants.map((plant, idx) => (
+        {plants.map((plant) => (
           <View
-            key={idx}
+            key={plant.id}
             className="flex-row items-center justify-between bg-[#122118] px-4 py-3 border-b border-[#264532]"
           >
             <View>
@@ -52,7 +96,15 @@ export default function Plant() {
                 Category: {plant.category}
               </Text>
             </View>
-            <Text className="text-white text-base">{plant.count}</Text>
+            <View className="flex-row items-center space-x-3">
+              <TouchableOpacity onPress={() => handleEditPlantDetails(plant)}>
+                <Ionicons name="pencil" size={20} color="#96c5a9" />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => confirmDeletePlant(plant.id)}>
+                <Ionicons name="trash" size={20} color="grey" />
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
       </ScrollView>
