@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { getPlants, deletePlant } from "@/firebase/db/plants";
 import { useCallback, useEffect, useState } from "react";
 import { Plant } from "@/types/plant";

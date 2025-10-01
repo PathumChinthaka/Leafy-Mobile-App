@@ -11,14 +11,13 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
 import { ArrowLeft } from "lucide-react-native";
-import { addPlant, updatePlant } from "@/firebase/db/plants";
+import { addPlant } from "@/firebase/db/plants";
 import { Plant } from "@/types/plant";
 import { v4 as uuidv4 } from "uuid";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
-import { getPlantById } from "@/firebase/db/plants";
 
 export default function AddPlantScreen() {
   const router = useRouter();
