@@ -5,8 +5,11 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
   serverTimestamp,
-  updateDoc,
+  updateDoc
 } from "firebase/firestore";
 import { Plant } from "../../types/plant";
 import { database } from "../firebase.config";
@@ -52,6 +55,36 @@ export async function getPlantById(id: string): Promise<Plant | null> {
     activeStatus: data.activeStatus,
     updatedOn: data.updatedOn?.toDate(),
   } as Plant;
+}
+
+export async function getLastFivePlants(): Promise<Plant[]> {
+  const dbquery = query(plantsColection, orderBy("datePlanted", "desc"), limit(5));
+  const snapshot = await getDocs(dbquery);
+
+  return snapshot.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      name: data.name,
+      species: data.species,
+      category: data.category,
+      datePlanted: data.datePlanted?.toDate(),
+      wateringFrequency: data.wateringFrequency,
+      notes: data.notes,
+      quantity: data.quantity,
+      activeStatus: data.activeStatus,
+      updatedOn: data.updatedOn?.toDate(),
+    } as Plant;
+  });
+}
+
+export async function getTotalPlants(): Promise<number> {
+  const snapshot = await getDocs(plantsColection);
+
+  return snapshot.docs.reduce((sum, d) => {
+    const data = d.data();
+    return sum + (data.quantity || 0);
+  }, 0);
 }
 
 export async function addPlant(

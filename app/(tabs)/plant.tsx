@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router, useFocusEffect } from "expo-router";
-import { getPlants } from "@/firebase/db/plants";
+import { getPlants, deletePlant } from "@/firebase/db/plants";
 import { useCallback, useEffect, useState } from "react";
 import { Plant } from "@/types/plant";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
@@ -43,23 +43,28 @@ export default function PlantScreen() {
 
   const handleDeletePlant = async (id: string) => {
     try {
+      await deletePlant(id);
     } catch (error) {
       console.error("Failed to delete plant:", error);
     }
   };
 
   const confirmDeletePlant = (id: string) => {
-    Alert.alert("Delete Plant", "Are you sure you want to delete this plant?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => handleDeletePlant(id),
-      },
-    ]);
+    Alert.alert(
+      "Delete Plant",
+      "Are you sure you want to delete this record?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => handleDeletePlant(id),
+        },
+      ]
+    );
   };
 
   return (

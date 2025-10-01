@@ -79,7 +79,7 @@ export default function UpdatePlantScreen() {
       };
 
       await updatePlant(id.toString(), updatedPlant);
-      router.replace('/plant');
+      router.replace("/plant");
     } catch (error) {
       console.error(error);
     } finally {
@@ -116,7 +116,7 @@ export default function UpdatePlantScreen() {
     <View className="flex-1 bg-[#122118]">
       <View className="flex-row items-center justify-between p-4 pb-2">
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.replace("/plant")}
           className="size-12 items-center justify-center"
         >
           <ArrowLeft size={24} color="white" />
@@ -235,9 +235,7 @@ export default function UpdatePlantScreen() {
           onPress={handleUpdatePlant}
           className="bg-[#20df6c] rounded-lg h-12 items-center justify-center"
         >
-          <Text className="text-[#122118] font-bold text-base">
-            Update
-          </Text>
+          <Text className="text-[#122118] font-bold text-base">Update</Text>
         </TouchableOpacity>
       </View>
     </View>
