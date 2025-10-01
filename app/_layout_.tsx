@@ -1,8 +1,8 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { View, ActivityIndicator } from "react-native";
 import "../global.css";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
@@ -32,11 +32,7 @@ export default function RootLayout() {
   }, [user, initializing, segments]);
 
   if (initializing) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

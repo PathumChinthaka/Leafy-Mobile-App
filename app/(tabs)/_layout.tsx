@@ -41,6 +41,12 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="plant/[id]"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

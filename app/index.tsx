@@ -4,6 +4,7 @@ import { ActivityIndicator, View, Text } from "react-native";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/firebase/firebase.config";
 import "../global.css";
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function Index() {
   const router = useRouter();
@@ -25,12 +26,7 @@ export default function Index() {
   }, []);
 
   if (checkingAuth) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <LoadingSpinner />;
   }
 
   return null;

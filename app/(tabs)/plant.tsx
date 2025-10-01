@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { getPlants } from "@/firebase/db/plants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Plant } from "@/types/plant";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
@@ -18,29 +18,28 @@ export default function PlantScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchPlants = async () => {
-      try {
-        setLoading(true);
-        const plants = await getPlants();
-        if (plants) {
-          setPlants(plants);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchPlants = async () => {
+        try {
+          setLoading(true);
+          const plants = await getPlants();
+          if (plants) {
+            setPlants(plants);
+          }
+          setLoading(false);
+        } catch (error) {
+          console.error("failed to fetch plants", error);
+          setLoading(false);
         }
-        setLoading(false);
-      } catch (error) {
-        console.error("failed to fetch plants", error);
-        setLoading(false);
-      }
-    };
-
-    fetchPlants();
-  }, []);
+      };
+      fetchPlants();
+    }, [])
+  );
 
   if (loading) {
     return <LoadingSpinner />;
   }
-
-  const handleEditPlantDetails = (plant: Plant) => {};
 
   const handleDeletePlant = async (id: string) => {
     try {
@@ -83,30 +82,38 @@ export default function PlantScreen() {
       </View>
 
       <ScrollView className="flex-1">
-        {plants.map((plant) => (
-          <View
-            key={plant.id}
-            className="flex-row items-center justify-between bg-[#122118] px-4 py-3 border-b border-[#264532]"
-          >
-            <View>
-              <Text className="text-white text-base font-medium">
-                {plant.name}
-              </Text>
-              <Text className="text-[#96c5a9] text-sm">
-                Category: {plant.category}
-              </Text>
-            </View>
-            <View className="flex-row items-center space-x-3">
-              <TouchableOpacity onPress={() => handleEditPlantDetails(plant)}>
-                <Ionicons name="pencil" size={20} color="#96c5a9" />
-              </TouchableOpacity>
+        {plants?.length > 0 &&
+          plants.map((plant) => (
+            <View
+              key={plant.id}
+              className="flex-row items-center justify-between bg-[#122118] px-4 py-3 border-b border-[#264532]"
+            >
+              <View>
+                <Text className="text-white text-base font-medium">
+                  {plant.name}
+                </Text>
+                <Text className="text-[#96c5a9] text-sm">
+                  Category: {plant.category}
+                </Text>
+              </View>
+              <View className="flex-row items-center space-x-3">
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: "/plant/[id]",
+                      params: { id: plant.id.toString() },
+                    })
+                  }
+                >
+                  <Ionicons name="pencil" size={20} color="#96c5a9" />
+                </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => confirmDeletePlant(plant.id)}>
-                <Ionicons name="trash" size={20} color="grey" />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => confirmDeletePlant(plant.id)}>
+                  <Ionicons name="trash" size={20} color="grey" />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ))}
+          ))}
       </ScrollView>
     </SafeAreaView>
   );

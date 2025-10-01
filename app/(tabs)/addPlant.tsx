@@ -8,26 +8,29 @@ import {
   Platform,
   Pressable,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
 import { ArrowLeft } from "lucide-react-native";
-import { addPlant } from "@/firebase/db/plants";
+import { addPlant, updatePlant } from "@/firebase/db/plants";
 import { Plant } from "@/types/plant";
 import { v4 as uuidv4 } from "uuid";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import { getPlantById } from "@/firebase/db/plants";
 
 export default function AddPlantScreen() {
   const router = useRouter();
-  const [plantName, setPlantName] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [species, setSpecies] = useState("");
-  const [category, setCategory] = useState("vegetable");
+  const { id } = useLocalSearchParams();
+  const [plant, setPlant] = useState<Plant | null>(null);
+  const [plantName, setPlantName] = useState<string>("");
+  const [quantity, setQuantity] = useState<string>("");
+  const [species, setSpecies] = useState<string>("");
+  const [category, setCategory] = useState<string>("vegetable");
   const [datePlanted, setDatePlanted] = useState(new Date());
-  const [wateringFrequency, setWateringFrequency] = useState("");
-  const [notes, setNotes] = useState("");
+  const [wateringFrequency, setWateringFrequency] = useState<string>("");
+  const [notes, setNotes] = useState<string>("");
   const [showPicker, setShowPicker] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -193,7 +196,9 @@ export default function AddPlantScreen() {
           onPress={handleAddPlant}
           className="bg-[#20df6c] rounded-lg h-12 items-center justify-center"
         >
-          <Text className="text-[#122118] font-bold text-base">Add Plant</Text>
+          <Text className="text-[#122118] font-bold text-base">
+            {"Add"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
