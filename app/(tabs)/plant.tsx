@@ -13,28 +13,40 @@ import { getPlants, deletePlant } from "@/firebase/db/plants";
 import { useCallback, useEffect, useState } from "react";
 import { Plant } from "@/types/plant";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function PlantScreen() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
+
+  const debouncedSearchQuery = useDebounce(searchQuery);
 
   useFocusEffect(
     useCallback(() => {
+      let isActive = true;
+
       const fetchPlants = async () => {
         try {
           setLoading(true);
-          const plants = await getPlants();
-          if (plants) {
+          const plants = await getPlants(debouncedSearchQuery?.trim() || null);
+          if (isActive) {
             setPlants(plants);
+            setLoading(false);
           }
-          setLoading(false);
         } catch (error) {
-          console.error("failed to fetch plants", error);
-          setLoading(false);
+          if (isActive) {
+            console.error("Failed to fetch plants", error);
+            setLoading(false);
+          }
         }
       };
+
       fetchPlants();
-    }, [])
+      return () => {
+        isActive = false;
+      };
+    }, [debouncedSearchQuery])
   );
 
   if (loading) {
@@ -67,6 +79,11 @@ export default function PlantScreen() {
     );
   };
 
+  function capitalizeFirstLetter(str: string) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#122118]">
       <View className="flex-row items-center justify-between px-4 py-3">
@@ -81,7 +98,9 @@ export default function PlantScreen() {
           <TextInput
             placeholder="Search plants"
             placeholderTextColor="#96c5a9"
-            className="flex-1 text-white ml-2"
+            value={searchQuery || ""}
+            className="flex-1 text-white ml-2 border-0 outline-none"
+            onChangeText={setSearchQuery}
           />
         </View>
       </View>
@@ -95,7 +114,7 @@ export default function PlantScreen() {
             >
               <View>
                 <Text className="text-white text-base font-medium">
-                  {plant.name}
+                  {capitalizeFirstLetter(plant.name)}
                 </Text>
                 <Text className="text-[#96c5a9] text-sm">
                   Category: {plant.category}
@@ -119,6 +138,10 @@ export default function PlantScreen() {
               </View>
             </View>
           ))}
+
+        {plants.length === 0 && (
+          <Text className="text-white text-center p-5">No plants found</Text>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

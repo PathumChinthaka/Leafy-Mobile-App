@@ -38,7 +38,7 @@ export default function AddPlantScreen() {
       setLoading(true);
       const plantDetails: Plant = {
         id: uuidv4(),
-        name: plantName,
+        name: plantName.toLowerCase(),
         species: species || null,
         category: category,
         datePlanted: new Date(),

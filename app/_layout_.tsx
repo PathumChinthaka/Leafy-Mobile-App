@@ -1,26 +1,16 @@
-import { Stack, useRouter, useSegments } from "expo-router";
-import { useEffect, useState } from "react";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { Stack, useSegments, useRouter } from "expo-router";
+import { useEffect } from "react";
 import "../global.css";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
-export default function RootLayout() {
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+function AuthRedirectLayout() {
+  const { user, loading } = useAuth();
   const router = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((firebaseUser) => {
-      setUser(firebaseUser);
-      setInitializing(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    if (initializing) return;
+    if (loading) return; 
 
     const inTabsGroup = segments[0] === "(tabs)";
 
@@ -29,11 +19,9 @@ export default function RootLayout() {
     } else if (!user && inTabsGroup) {
       router.replace("/login");
     }
-  }, [user, initializing, segments]);
+  }, [user, loading, segments, router]);
 
-  if (initializing) {
-    return <LoadingSpinner />;
-  }
+  if (loading) return <LoadingSpinner />;
 
   return (
     <Stack>
@@ -41,5 +29,13 @@ export default function RootLayout() {
       <Stack.Screen name="signup" options={{ title: "Sign Up" }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AuthProvider>
+      <AuthRedirectLayout />
+    </AuthProvider>
   );
 }

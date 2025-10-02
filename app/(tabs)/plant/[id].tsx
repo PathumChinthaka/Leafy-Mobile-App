@@ -68,7 +68,7 @@ export default function UpdatePlantScreen() {
       setLoading(true);
       const updatedPlant: Plant = {
         ...plant,
-        name: plantName,
+        name: plantName.toLowerCase(),
         species: species || null,
         category,
         datePlanted,

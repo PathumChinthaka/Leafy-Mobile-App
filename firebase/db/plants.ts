@@ -9,15 +9,30 @@ import {
   orderBy,
   query,
   serverTimestamp,
-  updateDoc
+  updateDoc,
+  where, 
 } from "firebase/firestore";
 import { Plant } from "../../types/plant";
 import { database } from "../firebase.config";
 
 const plantsColection = collection(database, "plants");
 
-export async function getPlants(): Promise<Plant[]> {
-  const plantCollection = await getDocs(plantsColection);
+export async function getPlants(searchQuery?: string | null): Promise<Plant[]> {
+  let plantQuery;
+
+  if (searchQuery) {
+    const search = searchQuery.toLowerCase();
+    plantQuery = query(
+      plantsColection,
+      orderBy("name"),
+      where("name", ">=", search),
+      where("name", "<=", search + "\uf8ff")
+    );
+  } else {
+    plantQuery = query(plantsColection, orderBy("name"));
+  }
+
+  const plantCollection = await getDocs(plantQuery);
 
   return plantCollection.docs.map((d) => {
     const data = d.data();

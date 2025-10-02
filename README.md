@@ -30,7 +30,7 @@ With Leafy, you can create, update, and delete plants, track details like wateri
 - **Navigation**: [Expo Router](https://expo.github.io/router/)  
 - **Styling**: [NativeWind](https://www.nativewind.dev/)  
 - **Auth & Database**: [Firebase Authentication](https://firebase.google.com/docs/auth) + [Cloud Firestore](https://firebase.google.com/docs/firestore)  
-- **Package Manager**: [pnpm](https://pnpm.io/)  
+- **Package Manager**: [npm](https://www.npmjs.com/)  
 
 ---
 
@@ -39,7 +39,7 @@ With Leafy, you can create, update, and delete plants, track details like wateri
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (LTS recommended)
-- [pnpm](https://pnpm.io/) installed globally
+- [npm](https://www.npmjs.com/) installed globally
 - [Expo Go](https://expo.dev/client) app on your mobile device (for development)
 - A Firebase project set up with Authentication + Firestore
 
@@ -54,9 +54,9 @@ With Leafy, you can create, update, and delete plants, track details like wateri
 2. Install dependencies with pnpm:
 
     ```bash
-    pnpm install
+    npm install
 
 3. Start the development server:
 
     ```bash
-    pnpm start
+    npx expo start
