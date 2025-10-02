@@ -8,12 +8,12 @@ import {
   Platform,
   Pressable,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
 import { ArrowLeft } from "lucide-react-native";
 import { addPlant } from "@/firebase/db/plants";
 import { Plant } from "@/types/plant";
-import { v4 as uuidv4 } from "uuid";
+import uuid from "react-native-uuid";
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -21,8 +21,6 @@ import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
 export default function AddPlantScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams();
-  const [plant, setPlant] = useState<Plant | null>(null);
   const [plantName, setPlantName] = useState<string>("");
   const [quantity, setQuantity] = useState<string>("");
   const [species, setSpecies] = useState<string>("");
@@ -37,7 +35,7 @@ export default function AddPlantScreen() {
     try {
       setLoading(true);
       const plantDetails: Plant = {
-        id: uuidv4(),
+        id: uuid.v4(),
         name: plantName.toLowerCase(),
         species: species || null,
         category: category,
@@ -97,7 +95,7 @@ export default function AddPlantScreen() {
     <View className="flex-1 bg-[#122118]">
       <View className="flex-row items-center justify-between p-4 pb-2">
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => router.replace("/plant")}
           className="size-12 items-center justify-center"
         >
           <ArrowLeft size={24} color="white" />
@@ -108,96 +106,114 @@ export default function AddPlantScreen() {
       </View>
 
       <ScrollView className="px-4 py-3">
-        <TextInput
-          placeholder="Plant Name"
-          placeholderTextColor="#95c6a9"
-          value={plantName}
-          onChangeText={setPlantName}
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
-
-        <TextInput
-          placeholder="Species (Optional)"
-          placeholderTextColor="#95c6a9"
-          value={species}
-          onChangeText={setSpecies}
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
-
-        <TextInput
-          placeholder="Quantity"
-          placeholderTextColor="#95c6a9"
-          value={quantity}
-          onChangeText={setQuantity}
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
-
-        <View className="bg-[#254632] rounded-lg mb-4">
-          <Picker
-            selectedValue={category}
-            onValueChange={(value) => setCategory(value)}
-            dropdownIconColor="#95c6a9"
-            style={{
-              color: "#96c5a9",
-              paddingHorizontal: 15,
-              backgroundColor: "#264532",
-              borderRadius: 12,
-              height: 56,
-            }}
-          >
-            <Picker.Item label="Vegetable" value="vegetable" />
-            <Picker.Item label="Herb" value="herb" />
-            <Picker.Item label="Fruit" value="fruit" />
-          </Picker>
+        <View className="mb-4">
+          <Text className="text-white mb-1">Plant Name</Text>
+          <TextInput
+            placeholder="Enter plant name"
+            placeholderTextColor="#95c6a9"
+            value={plantName}
+            onChangeText={setPlantName}
+            className="bg-[#254632] text-white rounded-lg h-14 px-4"
+          />
         </View>
 
-        <Pressable onPress={showDatepicker}>
+        <View className="mb-4">
+          <Text className="text-white mb-1">Species (Optional)</Text>
           <TextInput
-            placeholder="Date Planted"
+            placeholder="Enter species"
             placeholderTextColor="#95c6a9"
-            value={formatDate(datePlanted)}
-            editable={false}
-            className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
+            value={species}
+            onChangeText={setSpecies}
+            className="bg-[#254632] text-white rounded-lg h-14 px-4"
           />
-        </Pressable>
+        </View>
 
-        {showPicker && (
-          <RNDateTimePicker
-            testID="dateTimePicker"
-            value={datePlanted}
-            mode="date"
-            display={Platform.OS === "ios" ? "spinner" : "default"}
-            onChange={onDateChange}
+        <View className="mb-4">
+          <Text className="text-white mb-1">Quantity</Text>
+          <TextInput
+            placeholder="Enter quantity"
+            placeholderTextColor="#95c6a9"
+            value={quantity}
+            onChangeText={setQuantity}
+            keyboardType="numeric"
+            className="bg-[#254632] text-white rounded-lg h-14 px-4"
           />
-        )}
+        </View>
 
-        <TextInput
-          placeholder="Watering Frequency (Days)"
-          placeholderTextColor="#95c6a9"
-          value={wateringFrequency}
-          onChangeText={setWateringFrequency}
-          keyboardType="numeric"
-          className="bg-[#254632] text-white rounded-lg h-14 px-4 mb-4"
-        />
+        <View className="mb-4">
+          <Text className="text-white mb-1">Category</Text>
+          <View className="bg-[#254632] rounded-lg">
+            <Picker
+              selectedValue={category}
+              onValueChange={(value) => setCategory(value)}
+              dropdownIconColor="#95c6a9"
+              style={{
+                color: "#96c5a9",
+                paddingHorizontal: 15,
+                backgroundColor: "#264532",
+                borderRadius: 12,
+                height: 56,
+              }}
+            >
+              <Picker.Item label="Vegetable" value="vegetable" />
+              <Picker.Item label="Herb" value="herb" />
+              <Picker.Item label="Fruit" value="fruit" />
+            </Picker>
+          </View>
+        </View>
 
-        <TextInput
-          placeholder="Notes"
-          placeholderTextColor="#95c6a9"
-          value={notes}
-          onChangeText={setNotes}
-          multiline
-          className="bg-[#254632] text-white rounded-lg min-h-[120px] px-4 py-3 mb-6"
-        />
+        <View className="mb-4">
+          <Text className="text-white mb-1">Date Planted</Text>
+          <Pressable onPress={showDatepicker}>
+            <TextInput
+              placeholder="Select date"
+              placeholderTextColor="#95c6a9"
+              value={formatDate(datePlanted)}
+              editable={false}
+              className="bg-[#254632] text-white rounded-lg h-14 px-4"
+            />
+          </Pressable>
+          {showPicker && (
+            <RNDateTimePicker
+              testID="dateTimePicker"
+              value={datePlanted}
+              mode="date"
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={onDateChange}
+            />
+          )}
+        </View>
+
+        <View className="mb-4">
+          <Text className="text-white mb-1">Watering Frequency (Days)</Text>
+          <TextInput
+            placeholder="e.g. 3"
+            placeholderTextColor="#95c6a9"
+            value={wateringFrequency}
+            onChangeText={setWateringFrequency}
+            keyboardType="numeric"
+            className="bg-[#254632] text-white rounded-lg h-14 px-4"
+          />
+        </View>
+
+        <View className="mb-6">
+          <Text className="text-white mb-1">Notes</Text>
+          <TextInput
+            placeholder="Enter notes"
+            placeholderTextColor="#95c6a9"
+            value={notes}
+            onChangeText={setNotes}
+            multiline
+            className="bg-[#254632] text-white rounded-lg min-h-[120px] px-4 py-3"
+          />
+        </View>
       </ScrollView>
-
       <View className="px-4 py-3">
         <TouchableOpacity
           onPress={handleAddPlant}
           className="bg-[#20df6c] rounded-lg h-12 items-center justify-center"
         >
-          <Text className="text-[#122118] font-bold text-base">
-            {"Add"}
-          </Text>
+          <Text className="text-[#122118] font-bold text-base">{"Add"}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   ImageBackground,
   Text,
   TouchableOpacity,
@@ -12,6 +13,7 @@ import { auth } from "@/firebase/firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import { useRouter } from "expo-router";
+import { isValidEmail } from "@/util/methods";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -20,6 +22,11 @@ const Login = () => {
   const router = useRouter();
 
   const handleUserLogin = async () => {
+    if (!isValidEmail(email)) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+
     setLoading(true);
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
@@ -29,6 +36,9 @@ const Login = () => {
     } catch (err) {
       console.error("Sign in failed:", err);
       setLoading(false);
+      Alert.alert("Log in Failed", "Invalid User name or Password", [
+        { text: "OK" },
+      ]);
     } finally {
       setEmail("");
       setPassword("");

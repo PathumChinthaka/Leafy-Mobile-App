@@ -15,6 +15,7 @@ import { auth } from "@/firebase/firebase.config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 import Button from "@/components/Button/Button";
+import { isValidEmail } from "@/util/methods";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>("");
@@ -25,6 +26,11 @@ export default function RegisterScreen() {
   const router = useRouter();
 
   const handleRegister = async (): Promise<void> => {
+    if (!isValidEmail(email)) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
       return;

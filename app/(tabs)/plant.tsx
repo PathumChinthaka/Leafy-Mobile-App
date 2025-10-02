@@ -118,7 +118,7 @@ export default function PlantScreen() {
                   Category: {plant.category}
                 </Text>
               </View>
-              <View className="flex-row items-center space-x-3">
+              <View className="flex-row items-center space-x-5">
                 <TouchableOpacity
                   onPress={() =>
                     router.push({
@@ -127,7 +127,7 @@ export default function PlantScreen() {
                     })
                   }
                 >
-                  <Ionicons name="pencil" size={20} color="#96c5a9" />
+                  <Ionicons name="pencil" className="px-2" size={20} color="#96c5a9" />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => confirmDeletePlant(plant.id)}>
