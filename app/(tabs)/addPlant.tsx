@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
   Pressable,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
@@ -32,6 +33,19 @@ export default function AddPlantScreen() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleAddPlant = async () => {
+    if (!plantName || !quantity || !wateringFrequency || !category) {
+      Alert.alert("Missing Fields", "Please fill in all required fields.");
+      return;
+    }
+
+    if (isNaN(Number(quantity)) || isNaN(Number(wateringFrequency))) {
+      Alert.alert(
+        "Invalid Input",
+        "Quantity and watering frequency must be numbers."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       const plantDetails: Plant = {
@@ -47,6 +61,8 @@ export default function AddPlantScreen() {
         updatedOn: null,
       };
       await addPlant(plantDetails);
+
+      Alert.alert("Success", "Plant added successfully!");
     } catch (error) {
       console.error(error);
     } finally {

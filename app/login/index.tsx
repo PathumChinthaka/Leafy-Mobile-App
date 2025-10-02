@@ -22,6 +22,11 @@ const Login = () => {
   const router = useRouter();
 
   const handleUserLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Missing Fields", "User name and password is required");
+      return;
+    }
+
     if (!isValidEmail(email)) {
       Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;

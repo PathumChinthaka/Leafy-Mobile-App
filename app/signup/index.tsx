@@ -26,6 +26,11 @@ export default function RegisterScreen() {
   const router = useRouter();
 
   const handleRegister = async (): Promise<void> => {
+    if (!email || !password) {
+      Alert.alert("Missing Fields", "User name and password is required");
+      return;
+    }
+
     if (!isValidEmail(email)) {
       Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;
@@ -40,6 +45,7 @@ export default function RegisterScreen() {
       Alert.alert("Error", "Password must be at least 8 characters long");
       return;
     }
+
     setLoading(true);
     try {
       await createUserWithEmailAndPassword(auth, email, password);

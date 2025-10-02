@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
   Pressable,
+  Alert,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Picker } from "@react-native-picker/picker";
@@ -64,6 +65,19 @@ export default function UpdatePlantScreen() {
   const handleUpdatePlant = async () => {
     if (!plant) return;
 
+    if (!plantName || !quantity || !wateringFrequency || !category) {
+      Alert.alert("Missing Fields", "Please fill in all required fields.");
+      return;
+    }
+
+    if (isNaN(Number(quantity)) || isNaN(Number(wateringFrequency))) {
+      Alert.alert(
+        "Invalid Input",
+        "Quantity and watering frequency must be numbers."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       const updatedPlant: Plant = {
@@ -79,7 +93,13 @@ export default function UpdatePlantScreen() {
       };
 
       await updatePlant(id.toString(), updatedPlant);
-      router.replace("/plant");
+
+      Alert.alert("Success", "Plant updated successfully!");
+
+      setTimeout(() => {
+        router.replace("/plant");
+      }, 1500);
+      
     } catch (error) {
       console.error(error);
     } finally {
