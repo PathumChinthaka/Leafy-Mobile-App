@@ -55,7 +55,7 @@ export default function Dashboard() {
     <SafeAreaView className="flex-1 bg-[#122118]">
       <View className="flex-row items-center justify-between p-4 pb-2">
         <Text className="flex-1 text-center text-lg font-bold text-white pl-12">
-          Leafy Greenhouse
+          Leafy
         </Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>

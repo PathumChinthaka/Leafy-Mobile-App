@@ -22,31 +22,28 @@ export default function PlantScreen() {
 
   const debouncedSearchQuery = useDebounce(searchQuery);
 
+  const fetchPlants = useCallback(async () => {
+    try {
+      setLoading(true);
+      const plants = await getPlants(debouncedSearchQuery?.trim() || null);
+      setPlants(plants);
+    } catch (error) {
+      console.error("Failed to fetch plants", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [debouncedSearchQuery]);
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
-
-      const fetchPlants = async () => {
-        try {
-          setLoading(true);
-          const plants = await getPlants(debouncedSearchQuery?.trim() || null);
-          if (isActive) {
-            setPlants(plants);
-            setLoading(false);
-          }
-        } catch (error) {
-          if (isActive) {
-            console.error("Failed to fetch plants", error);
-            setLoading(false);
-          }
-        }
-      };
-
-      fetchPlants();
+      if (isActive) {
+        fetchPlants();
+      }
       return () => {
         isActive = false;
       };
-    }, [debouncedSearchQuery])
+    }, [fetchPlants])
   );
 
   if (loading) {
@@ -56,6 +53,7 @@ export default function PlantScreen() {
   const handleDeletePlant = async (id: string) => {
     try {
       await deletePlant(id);
+      await fetchPlants();
     } catch (error) {
       console.error("Failed to delete plant:", error);
     }

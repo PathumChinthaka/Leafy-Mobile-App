@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import "../global.css";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
+import 'expo-random'; 
 
 function AuthRedirectLayout() {
   const { user, loading } = useAuth();
