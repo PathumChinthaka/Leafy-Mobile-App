@@ -60,3 +60,6 @@ With Leafy, you can create, update, and delete plants, track details like wateri
 
     ```bash
     npx expo start
+
+### Youtube Video
+  [Youtube](https://www.youtube.com/watch?v=tZb9f2IxJhg)
